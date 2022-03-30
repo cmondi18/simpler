@@ -43,6 +43,10 @@ module Simpler
       @response['Content-Type'] = 'text/html'
     end
 
+    def set_params
+      @request.params.merge!(@request.env['simpler.params'])
+    end
+
     def write_response
       body = render_body
 
@@ -51,10 +55,6 @@ module Simpler
 
     def render_body
       View.new(@request.env).render(binding)
-    end
-
-    def set_params
-      @request.params.merge!(@request.env['simpler.params'])
     end
 
     def render(template)

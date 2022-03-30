@@ -16,7 +16,7 @@ class TestsController < Simpler::Controller
   end
 
   def show
-    @test = Test.first
+    @test_id = @request.params[:id]
   end
 
 end
