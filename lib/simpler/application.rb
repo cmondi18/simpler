@@ -33,6 +33,9 @@ module Simpler
       controller = route.controller.new(env)
       action = route.action
 
+      route.add_params(env['PATH_INFO'])
+      env['simpler.params'] = route.params
+
       make_response(controller, action)
     end
 
@@ -57,7 +60,12 @@ module Simpler
     end
 
     def not_found_response
-      [404, { 'Content-Type' => 'text/plain' }, ['Not Found']]
+      response = Rack::Response.new(
+        ['Not Found'],
+        404,
+        { 'Content-Type' => 'text/plain' }
+      )
+      response.finish
     end
 
   end

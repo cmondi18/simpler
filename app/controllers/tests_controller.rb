@@ -3,13 +3,20 @@ class TestsController < Simpler::Controller
   def index
     @time = Time.now
 
-    set_status(404)
-    set_custom_headers({ 'Content-Type' => 'text/plain',
-                         'X-Custom-Token' => 'Xz2313YuJ' })
+    # Examples of methods for status, headers and plain text
+
+    #set_status(404)
+    #set_custom_headers({ 'Content-Type' => 'text/plain',
+    #'X-Custom-Token' => 'Xz2313YuJ' })
+    #render plain: "Plain text response"
   end
 
   def create
 
+  end
+
+  def show
+    @test = Test.first
   end
 
 end

@@ -16,6 +16,7 @@ module Simpler
       @request.env['simpler.action'] = action
 
       set_default_headers
+      set_params
       send(action)
       write_response
 
@@ -52,12 +53,17 @@ module Simpler
       View.new(@request.env).render(binding)
     end
 
-    def params
-      @request.params
+    def set_params
+      @request.params.merge!(@request.env['simpler.params'])
     end
 
     def render(template)
-      @request.env['simpler.template'] = template
+      if template.is_a?(Hash)
+        @response['Content-Type'] = 'text/plain'
+        @request.env['simpler.plain_text'] = template[:plain]
+      else
+        @request.env['simpler.template'] = template
+      end
     end
 
   end
