@@ -16,10 +16,21 @@ module Simpler
       @request.env['simpler.action'] = action
 
       set_default_headers
+      set_params
       send(action)
       write_response
 
       @response.finish
+    end
+
+    protected
+
+    def set_status(status_code)
+      @response.status = status_code
+    end
+
+    def set_custom_headers(headers)
+      headers.each { |key, value| @response[key] = value }
     end
 
     private
@@ -32,6 +43,10 @@ module Simpler
       @response['Content-Type'] = 'text/html'
     end
 
+    def set_params
+      @request.params.merge!(@request.env['simpler.params'])
+    end
+
     def write_response
       body = render_body
 
@@ -42,12 +57,13 @@ module Simpler
       View.new(@request.env).render(binding)
     end
 
-    def params
-      @request.params
-    end
-
     def render(template)
-      @request.env['simpler.template'] = template
+      if template.is_a?(Hash)
+        @response['Content-Type'] = 'text/plain'
+        @request.env['simpler.plain_text'] = template[:plain]
+      else
+        @request.env['simpler.template'] = template
+      end
     end
 
   end
